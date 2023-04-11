@@ -45,7 +45,17 @@ class MenuItem(db.Model, UserMixin):
 
     menu_type_id = db.Column(db.Integer, db.ForeignKey(
         'menu_item_types.id'), nullable=False)
-    type = db.relationship('MenuItemType', back_populates='items')
+    menu_type = db.relationship('MenuItemType', back_populates='items')
+
+    # details = db.relationship(
+    #     'OrderDetail', back_populates='menu_item', cascade='all, delete-orphan')
+
+    order_details = db.relationship(
+        'Order',
+        secondary='order_details',
+        back_populates='menu_items',
+        cascade='all, delete'
+    )
 
 
 class MenuItemType(db.Model, UserMixin):
@@ -53,7 +63,7 @@ class MenuItemType(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
 
-    items = db.relationship('MenuItem', back_populates='type')
+    items = db.relationship('MenuItem', back_populates='menu_type')
 
 
 class Table(db.Model, UserMixin):
@@ -78,17 +88,36 @@ class Order(db.Model, UserMixin):
         'tables.id'), nullable=False)
     table = db.relationship('Table', back_populates='orders')
 
-    details = db.relationship('OrderDetail', back_populates='order')
+    # details = db.relationship(
+    #     'OrderDetail', back_populates='order', cascade='all, delete-orphan')
+
+    menu_items = db.relationship(
+        'MenuItem',
+        secondary='order_details',
+        back_populates='order_details',
+        cascade='all, delete'
+    )
 
 
-class OrderDetail(db.Model, UserMixin):
-    __tablename__ = "order_details"
-    id = db.Column(db.Integer, primary_key=True)
+OrderDetails = db.Table(
+    'order_details',
+    db.Model.metadata,
+    db.Column('orders', db.Integer, db.ForeignKey(
+        'orders.id'), primary_key=True),
+    db.Column('menu_items', db.Integer, db.ForeignKey(
+        'menu_items.id'), primary_key=True)
+)
 
-    order_id = db.Column(db.Integer, db.ForeignKey(
-        'orders.id'), nullable=False)
-    order = db.relationship('Order', back_populates='details')
 
-    menu_item_id = db.Column(db.Integer, db.ForeignKey(
-        'menu_items.id'), nullable=False)
-    item = db.relationship('MenuItem')
+# class OrderDetail(db.Model, UserMixin):
+#     __tablename__ = "order_details"
+#     id = db.Column(db.Integer, primary_key=True)
+
+#     order_id = db.Column(db.Integer, db.ForeignKey(
+#         'orders.id', ondelete='CASCADE'), nullable=False)
+#     order = db.relationship('Order', back_populates='details')
+
+#     menu_item_id = db.Column(db.Integer, db.ForeignKey(
+#         'menu_items.id', ondelete='CASCADE'), nullable=False)
+#     menu_item = db.relationship(
+#         'MenuItem', back_populates='details', cascade='all, delete-orphan')

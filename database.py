@@ -1,4 +1,4 @@
-from app.models import Employee, Menu, MenuItem, MenuItemType, Table
+from app.models import Employee, Menu, MenuItem, MenuItemType, Table, Order
 from app import app, db
 from sqlalchemy import inspect
 from dotenv import load_dotenv
@@ -21,10 +21,12 @@ with app.app_context():
 
     dinner = Menu(name="Dinner")
 
-    fries = MenuItem(name="French fries", price=3.50, type=sides, menu=dinner)
-    drp = MenuItem(name="Dr. Pepper", price=1.0, type=beverages, menu=dinner)
+    fries = MenuItem(name="French fries", price=3.50,
+                     menu_type=sides, menu=dinner)
+    drp = MenuItem(name="Dr. Pepper", price=1.0,
+                   menu_type=beverages, menu=dinner)
     jambalaya = MenuItem(name="Jambalaya", price=21.98,
-                         type=entrees, menu=dinner)
+                         menu_type=entrees, menu=dinner)
 
     table1 = Table(number=1, capacity=4)
     table2 = Table(number=2, capacity=4)
@@ -36,6 +38,12 @@ with app.app_context():
     table8 = Table(number=8, capacity=2)
     table9 = Table(number=9, capacity=2)
     table10 = Table(number=10, capacity=2)
+
+    order1 = Order(finished=False, employee=employee,
+                   table=table1, menu_items=[fries, drp])
+
+    order2 = Order(finished=True, employee=employee,
+                   table=table2, menu_items=[fries, drp, jambalaya])
 
     db.session.add(employee)
     db.session.add(beverages)
@@ -56,4 +64,7 @@ with app.app_context():
     db.session.add(table8)
     db.session.add(table9)
     db.session.add(table10)
+    db.session.add(order1)
+    db.session.add(order2)
+
     db.session.commit()
