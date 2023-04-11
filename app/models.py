@@ -65,7 +65,7 @@ class Table(db.Model, UserMixin):
     orders = db.relationship('Order', back_populates='table')
 
 
-class Order(db.model, UserMixin):
+class Order(db.Model, UserMixin):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
     finished = db.Column(db.Boolean, nullable=False)
@@ -81,7 +81,7 @@ class Order(db.model, UserMixin):
     details = db.relationship('OrderDetail', back_populates='order')
 
 
-class OrderDetail(db.model, UserMixin):
+class OrderDetail(db.Model, UserMixin):
     __tablename__ = "order_details"
     id = db.Column(db.Integer, primary_key=True)
 
@@ -91,3 +91,4 @@ class OrderDetail(db.model, UserMixin):
 
     menu_item_id = db.Column(db.Integer, db.ForeignKey(
         'menu_items.id'), nullable=False)
+    item = db.relationship('MenuItem')
