@@ -14,6 +14,8 @@ with app.app_context():
 
     employee = Employee(name="Margot", employee_number=1234,
                         password="password")
+    employee2 = Employee(name="Edgar", employee_number=1235,
+                         password="password")
 
     beverages = MenuItemType(name="Beverages")
     entrees = MenuItemType(name="Entrees")
@@ -46,6 +48,7 @@ with app.app_context():
                    table=table2, menu_items=[fries, drp, jambalaya])
 
     db.session.add(employee)
+    db.session.add(employee2)
     db.session.add(beverages)
     db.session.add(entrees)
     db.session.add(sides)

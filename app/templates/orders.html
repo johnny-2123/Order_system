@@ -2,4 +2,14 @@
 
 {% block content %}
 <h1>Order Up!</h1>
+<div>
+    <form method="post" action="{{url_for('orders.assign')}}">
+        {{taf.csrf_token}}
+        <div>Assign Table</div>
+        <div>{{taf.tables}}</div>
+        <div>{{taf.servers}}</div>
+        <div>{{taf.assign(class="button assign")}}</div>
+    </form>
+</div>
+
 {% endblock %}
