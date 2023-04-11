@@ -22,3 +22,40 @@ class Employee(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+class Menu(db.Model, UserMixin):
+    __tablename__ = 'menus'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), nullable=False)
+
+    items = db.relationship('MenuItem', back_populates='menu')
+
+
+class MenuItem(db.Model, UserMixin):
+    __tablename__ = 'menu_items'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    menu_id = db.Column(db.Integer, db.ForeignKey('menus.id'), nullable=False)
+    menu = db.relationship('Menu', back_populates='items')
+
+    menu_type_id = db.Column(db.Integer, db.ForeignKey(
+        'menu_item_types.id'), nullable=False)
+    type = db.relationship('MenuItemType', back_populates='')
+
+
+class MenuItemType(db.Model, UserMixin):
+    __tablename__ = 'menu_item_types'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+
+    items = db.relationship('MenuItem', back_populates='type')
+
+
+class Tables(db.Model, UserMixin):
+    __tablename__ = 'tables'
+    id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.Integer, nullable=False, unique=True)
+    capacity = db.Column(db.Integer, nullable=False)
