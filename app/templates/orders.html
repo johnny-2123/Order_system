@@ -10,6 +10,24 @@
         <div>{{taf.servers}}</div>
         <div>{{taf.assign(class="button assign")}}</div>
     </form>
+
+    <span></span>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Your Open Orders</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>Table {{order.table.number}}</td>
+                <td>{{"${:,.2f}".format(order.total)}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

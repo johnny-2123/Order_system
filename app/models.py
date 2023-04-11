@@ -98,6 +98,10 @@ class Order(db.Model, UserMixin):
         cascade='all, delete'
     )
 
+    @property
+    def total(self):
+        return sum([item.price for item in self.menu_items])
+
 
 OrderDetails = db.Table(
     'order_details',
